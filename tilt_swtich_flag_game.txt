@@ -1,0 +1,65 @@
+bool hand_red = false;      // 手元の赤色の旗 (上ならtrue、下ならfalse)
+bool hand_white = false;    // 手元の白色の旗 (上ならtrue、下ならfalse)
+bool ans_red = false;       // 出題の赤色の旗 (上ならtrue、下ならfalse)
+bool ans_white = false;     // 出題の白色の旗 (上ならtrue、下ならfalse)
+
+void question(){
+  if(random(2) == 1){       // 0か1の数字をランダムで算出する。1ならtrue、0ならfalseとなる
+    ans_red = !ans_red;     // 次の出題では赤色の旗を逆にするのが正解となる
+  }else{
+    ans_white = !ans_white; // 次の出題では白色の旗を逆にするのが正解となる
+  }
+  String red_gobi = "て";   // 出題文の「赤あげ」の次の語尾。デフォルトは「て」
+  String white_gobi = "て"; // 出題文の「白あげ」の次の語尾。デフォルトは「て」
+  if (ans_red == false){
+    red_gobi = "ない";      // 赤色の旗を上げない場合は「て」ではなく「ない」とする
+  }
+  if (ans_white == false){
+    white_gobi = "ない";   // 白色の旗を上げない場合は「て」ではなく「ない」とする
+  }
+  Serial.print("赤あげ" + red_gobi + "、" + "白あげ" + white_gobi + "\n" ); // 指示を表示
+}
+
+void judge()
+{
+  if (hand_red == ans_red && hand_white == ans_white){ // 手元が答えと同じか判定
+    Serial.print("正解\n");                          // 正解したことを表示
+    question();                                      // 次の出題をする
+  }else{
+    Serial.print("ちがうよ\n");                       // 間違えたことを表示
+  }
+}
+
+void setup()
+{ 
+  pinMode(LED_BUILTIN, OUTPUT);  // 内蔵のLEDを出力に設定
+  pinMode(2,INPUT_PULLUP);       // 2番のピンをプルアップ付き入力に設定。赤色の旗用
+  pinMode(4,INPUT_PULLUP);       // 4番のピンをプルアップ付き入力に設定。白色の旗用
+  Mouse.begin();                 // PCにマウスとして認識させる
+  question();                    // 出題する
+} 
+
+void loop()
+{
+  if(digitalRead(2) == LOW && hand_red == false){    // 赤色の旗の下→上を検知
+    hand_red = true;                                 // 手元の赤色の旗が上がったことを記録
+    judge();                                         // 正誤判定
+    delay(2000);                                     // チャタリング防止のため2秒待つ
+  }
+  if(digitalRead(2) == HIGH && hand_red == true){    // 赤色の旗の上→下を検知
+    hand_red = false;                               // 手元の赤色の旗が上がったことを記録
+    judge();                                         // 正誤判定
+    delay(2000);                                     // チャタリング防止のため2秒待つ
+  }
+  if(digitalRead(4) == LOW && hand_white == false){  // 白色の旗の下→上を検知
+    hand_white = true;                               // 手元の白色の旗が上がったことを記録
+    judge();                                         // 正誤判定
+    delay(2000);                                     // チャタリング防止のため2秒待つ
+  }
+  if(digitalRead(4) == HIGH  && hand_white == true){ // 白色の旗の上→下を検知
+    hand_white = false;                              // 手元の白色の旗が下がったことを記録
+    judge();                                         // 正誤判定
+    delay(2000);                                     // チャタリング防止のため2秒待つ
+  }
+}
+
