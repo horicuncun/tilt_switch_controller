@@ -1,0 +1,21 @@
+#include <Mouse.h>
+
+void setup()
+{ 
+  pinMode(LED_BUILTIN, OUTPUT);      // 内蔵のLEDを出力に設定
+  pinMode(2,INPUT_PULLUP);           // 2番のピンをプルアップ付き入力に設定
+  Mouse.begin();                     // PCにマウスとして認識させる
+} 
+
+void loop()
+{
+  if(digitalRead(2) == HIGH){        // スイッチがオフのとき
+    digitalWrite(LED_BUILTIN,LOW);   // LEDをオフにする
+    Mouse.release();                 // マウスを離す
+  }
+  else{                              // スイッチがオンのとき
+    digitalWrite(LED_BUILTIN,HIGH);  // LEDをオンにする
+    Mouse.press();                   // マウスを押下する
+    delay(100);                      // チャタリング防止のため100ミリ秒待つ
+  }
+}
