@@ -35,7 +35,6 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);  // 内蔵のLEDを出力に設定
   pinMode(2,INPUT_PULLUP);       // 2番のピンをプルアップ付き入力に設定。赤色の旗用
   pinMode(4,INPUT_PULLUP);       // 4番のピンをプルアップ付き入力に設定。白色の旗用
-  Mouse.begin();                 // PCにマウスとして認識させる
   question();                    // 出題する
 } 
 
